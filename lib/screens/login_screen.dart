@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         await SharedPreferences.getInstance();
                     await prefs.setBool('isLoggedIn', true);
                     await prefs.setString('email', email);
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushReplacementNamed(context, '/home');
                   } else {
                     // Show an error message
                     ScaffoldMessenger.of(context).showSnackBar(

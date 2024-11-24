@@ -4,6 +4,10 @@
         "source": "com.example.flutter_wisata_candi.app-main-23:/mipmap-xxxhdpi/ic_launcher.png"
     },
     {
+        "merged": "com.example.flutter_wisata_candi.app-merged_res-28:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.flutter_wisata_candi.app-main-23:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
         "merged": "com.example.flutter_wisata_candi.app-merged_res-28:/mipmap-mdpi_ic_launcher.png.flat",
         "source": "com.example.flutter_wisata_candi.app-main-23:/mipmap-mdpi/ic_launcher.png"
     },
