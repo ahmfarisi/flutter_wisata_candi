@@ -1,4 +1,4 @@
-#Mon Nov 25 01:06:06 WIB 2024
+#Mon Nov 25 18:38:10 WIB 2024
 base.0=/Users/ahmfarisi/Documents/GitHub/flutter_wisata_candi/build/app/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 base.1=/Users/ahmfarisi/Documents/GitHub/flutter_wisata_candi/build/app/intermediates/dex/debug/mergeLibDexDebug/0/classes.dex
 base.2=/Users/ahmfarisi/Documents/GitHub/flutter_wisata_candi/build/app/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
