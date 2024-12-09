@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wisata_candi/data/candi_data.dart';
 import 'package:flutter_wisata_candi/models/candi.dart';
+import 'package:flutter_wisata_candi/screens/detail_screen.dart';
+import 'package:flutter_wisata_candi/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('isLoggedIn');
     await prefs.remove('email');
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
   @override
@@ -48,7 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Candi candi = candiList[index];
                 return InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, '/detail', arguments: candi);
+                    // Navigator.pushNamed(context, '/detail', arguments: candi);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailScreen(candi: candi)));
                   },
                   child: Card(
                     shape: RoundedRectangleBorder(

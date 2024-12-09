@@ -1,10 +1,59 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wisata_candi/models/candi.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final Candi candi;
   const DetailScreen({super.key, required this.candi});
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  bool _isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteStatus();
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteCandis = prefs.getStringList('favoriteCandis') ?? [];
+    setState(() {
+      _isFavorite = favoriteCandis.contains(widget.candi.name);
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteCandis = prefs.getStringList('favoriteCandis') ?? [];
+
+    setState(() {
+      if (_isFavorite) {
+        favoriteCandis.remove(widget.candi.name);
+        _isFavorite = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${widget.candi.name} removed from favorites'),
+          ),
+        );
+      } else {
+        favoriteCandis.add(widget.candi.name);
+        _isFavorite = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${widget.candi.name} added to favorites'),
+          ),
+        );
+      }
+    });
+
+    await prefs.setStringList('favoriteCandis', favoriteCandis);
+  }
 
   void _showZoomedImage(BuildContext context, String imageUrl) {
     showDialog(
@@ -48,7 +97,7 @@ class DetailScreen extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
-                      candi.imageAsset,
+                      widget.candi.imageAsset,
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 200,
@@ -80,14 +129,18 @@ class DetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          candi.name,
+                          widget.candi.name,
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.favorite_border),
-                          onPressed: () {},
-                        )
+                            icon: Icon(
+                              _isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: _isFavorite ? Colors.red : null,
+                            ),
+                            onPressed: _toggleFavorite)
                       ],
                     ),
                     //Info Tengah (Lokasi, Dibangun, dan Tipe)
@@ -103,7 +156,7 @@ class DetailScreen extends StatelessWidget {
                           child: Text('Lokasi',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                        Text(': ${candi.location}'),
+                        Text(': ${widget.candi.location}'),
                       ],
                     ),
                     Row(
@@ -118,7 +171,7 @@ class DetailScreen extends StatelessWidget {
                           child: Text('Dibangun',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                        Text(': ${candi.built}'),
+                        Text(': ${widget.candi.built}'),
                       ],
                     ),
                     Row(
@@ -133,7 +186,7 @@ class DetailScreen extends StatelessWidget {
                           child: Text('Tipe',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                        Text(': ${candi.type}'),
+                        Text(': ${widget.candi.type}'),
                       ],
                     ),
                     //Info Bawah (Deskripsi)
@@ -144,7 +197,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      candi.description,
+                      widget.candi.description,
                       textAlign: TextAlign.justify,
                     ),
                     const SizedBox(height: 16),
@@ -171,13 +224,13 @@ class DetailScreen extends StatelessWidget {
                       height: 100,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: candi.imageUrls.length,
+                        itemCount: widget.candi.imageUrls.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: GestureDetector(
                               onTap: () => _showZoomedImage(
-                                  context, candi.imageUrls[index]),
+                                  context, widget.candi.imageUrls[index]),
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16),
@@ -189,7 +242,7 @@ class DetailScreen extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(14),
                                   child: CachedNetworkImage(
-                                    imageUrl: candi.imageUrls[index],
+                                    imageUrl: widget.candi.imageUrls[index],
                                     placeholder: (context, url) => Transform.scale(
                                         scale: 0.2,
                                         child:
